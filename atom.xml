@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[ROYTRACK]]></title>
+  <subtitle><![CDATA[记录roy的轨迹]]></subtitle>
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://roytrack.github.io/"/>
+  <updated>2014-12-08T14:05:34.551Z</updated>
+  <id>http://roytrack.github.io/</id>
+  
+  <author>
+    <name><![CDATA[roy]]></name>
+    <email><![CDATA[me@roytrack.com]]></email>
+  </author>
+  
+  <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[在oceanDigital主机上玩vpn和shadowsock]]></title>
+    <link href="http://roytrack.github.io/2014/12/07/vpnAndshadowsock/"/>
+    <id>http://roytrack.github.io/2014/12/07/vpnAndshadowsock/</id>
+    <published>2014-12-07T08:02:16.000Z</published>
+    <updated>2014-12-07T08:40:48.000Z</updated>
+    <content type="html"><![CDATA[<h1 id="看看怎么玩呢？">看看怎么玩呢？</h1>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="看看怎么玩呢？">看看怎么玩呢？</h1>
+]]>
+    </summary>
+    
+      <category term="vpn" scheme="http://roytrack.github.io/tags/vpn/"/>
+    
+      <category term="sock5" scheme="http://roytrack.github.io/tags/sock5/"/>
+    
+      <category term="linux" scheme="http://roytrack.github.io/categories/linux/"/>
+    
+  </entry>
+  
+</feed>
