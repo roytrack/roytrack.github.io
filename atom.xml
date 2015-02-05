@@ -4,7 +4,7 @@
   <subtitle><![CDATA[记录roy的轨迹]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://roytrack.github.io/"/>
-  <updated>2015-02-05T12:06:47.243Z</updated>
+  <updated>2015-02-05T12:14:41.939Z</updated>
   <id>http://roytrack.github.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://roytrack.github.io/2014/12/07/vpnAndshadowsock/"/>
     <id>http://roytrack.github.io/2014/12/07/vpnAndshadowsock/</id>
     <published>2014-12-07T08:02:16.000Z</published>
-    <updated>2015-02-05T12:04:23.000Z</updated>
+    <updated>2015-02-05T12:08:54.000Z</updated>
     <content type="html"><![CDATA[<ul>
 <li><a href="#vpn">vpn</a><ul>
 <li><a href="#vpninstall">vpn相关软件的安装</a></li>
@@ -28,7 +28,7 @@
 </li>
 <li><a href="#shadowsock">shadowsock</a><ul>
 <li><a href="#ssinstall">shadowsock的安装与自启动</a></li>
-<li>[客户端配置与选择] (#ssconfig)</li>
+<li><a href="#ssconfig">客户端配置与选择</a></li>
 <li><a href="sstohttp">采用privoxy转成http代理</a></li>
 </ul>
 </li>

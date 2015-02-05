@@ -4,7 +4,7 @@
     
   <url>
     <loc>http://roytrack.github.io/2014/12/07/vpnAndshadowsock/</loc>
-    <lastmod>2015-02-05T12:04:23.000Z</lastmod>
+    <lastmod>2015-02-05T12:08:54.000Z</lastmod>
     <data>
         <display>
         <title>在DigitalOcean主机上玩vpn和shadowsock</title>
@@ -22,7 +22,7 @@
 </li>
 <li><a href="#shadowsock">shadowsock</a><ul>
 <li><a href="#ssinstall">shadowsock的安装与自启动</a></li>
-<li>[客户端配置与选择] (#ssconfig)</li>
+<li><a href="#ssconfig">客户端配置与选择</a></li>
 <li><a href="sstohttp">采用privoxy转成http代理</a></li>
 </ul>
 </li>
