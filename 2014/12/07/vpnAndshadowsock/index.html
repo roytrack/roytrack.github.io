@@ -3,17 +3,54 @@
 <head>
   <meta charset="utf-8">
   
-  <title>在oceanDigital主机上玩vpn和shadowsock | ROYTRACK</title>
+  <title>在DigitalOcean主机上玩vpn和shadowsock | ROYTRACK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="看看怎么玩呢？">
+  <meta name="description" content="vpn
+vpn相关软件的安装
+vpn 本地配置
+
+
+shadowsock
+shadowsock的安装与自启动
+[客户端配置与选择] (#ssconfig)
+采用privoxy转成http代理
+
+
+
+年前拿到了个DigitalOcean的主机，终于摆脱了GFW和goagent的斗智斗勇，过上了墙里墙外的美好生活。在centos7-64bit上安装vpn和shadowsock的过程中，遇到了一些问题">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在oceanDigital主机上玩vpn和shadowsock">
+<meta property="og:title" content="在DigitalOcean主机上玩vpn和shadowsock">
 <meta property="og:url" content="http://roytrack.github.io/2014/12/07/vpnAndshadowsock/">
 <meta property="og:site_name" content="ROYTRACK">
-<meta property="og:description" content="看看怎么玩呢？">
+<meta property="og:description" content="vpn
+vpn相关软件的安装
+vpn 本地配置
+
+
+shadowsock
+shadowsock的安装与自启动
+[客户端配置与选择] (#ssconfig)
+采用privoxy转成http代理
+
+
+
+年前拿到了个DigitalOcean的主机，终于摆脱了GFW和goagent的斗智斗勇，过上了墙里墙外的美好生活。在centos7-64bit上安装vpn和shadowsock的过程中，遇到了一些问题">
+<meta property="og:image" content="http://roytrack.qiniudn.com/blog_vpnppp_perl_iptables.jpg">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="在oceanDigital主机上玩vpn和shadowsock">
-<meta name="twitter:description" content="看看怎么玩呢？">
+<meta name="twitter:title" content="在DigitalOcean主机上玩vpn和shadowsock">
+<meta name="twitter:description" content="vpn
+vpn相关软件的安装
+vpn 本地配置
+
+
+shadowsock
+shadowsock的安装与自启动
+[客户端配置与选择] (#ssconfig)
+采用privoxy转成http代理
+
+
+
+年前拿到了个DigitalOcean的主机，终于摆脱了GFW和goagent的斗智斗勇，过上了墙里墙外的美好生活。在centos7-64bit上安装vpn和shadowsock的过程中，遇到了一些问题">
 <meta name="twitter:creator" content="@coolwuxing">
 
   
@@ -94,7 +131,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      在oceanDigital主机上玩vpn和shadowsock
+      在DigitalOcean主机上玩vpn和shadowsock
     </h1>
   
 
@@ -102,7 +139,116 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="看看怎么玩呢？">看看怎么玩呢？</h1>
+        <ul>
+<li><a href="#vpn">vpn</a><ul>
+<li><a href="#vpninstall">vpn相关软件的安装</a></li>
+<li><a href="#vpnconfig">vpn 本地配置</a></li>
+</ul>
+</li>
+<li><a href="#shadowsock">shadowsock</a><ul>
+<li><a href="#ssinstall">shadowsock的安装与自启动</a></li>
+<li>[客户端配置与选择] (#ssconfig)</li>
+<li><a href="sstohttp">采用privoxy转成http代理</a></li>
+</ul>
+</li>
+</ul>
+<p>年前拿到了个DigitalOcean的主机，终于摆脱了GFW和goagent的斗智斗勇，过上了墙里墙外的美好生活。<br>在centos7-64bit上安装vpn和shadowsock的过程中，遇到了一些问题。记录下来后结合最近的使用，分享给大家一些经验和技巧。</p>
+<p>安装环境： CentOS 7.0 x64 vmlinuz-3.10.0-123.8.1.el7.x86_64 。通过cat /proc/version查看信息如下：<br>Linux version 3.10.0-123.8.1.el7.x86_64 (builder@kbuilder.dev.centos.org) (gcc version 4.8.2 20140120 (Red Hat 4.8.2-16) (GCC) ) #1 SMP Mon Sep 22 19:06:58 UTC 2014</p>
+<p>硬广插入：vpn和shadowsock都采用的DigitalOcean的ssd主机5美元一个月搭建的，优势网上搜一下，ssd主机还有啥好说的？ <a href="https://www.digitalocean.com/?refcode=b055d2148f2f" target="_blank" rel="external">点击此处</a>注册购买，可以免费获赠10美元优惠款哦！</p>
+<p><h2 id="vpn">vpn部分</h2></p>
+<p><h3 id="vpninstall">vpn相关软件的安装</h3><br>vpn安装主要需要ppp 、pptpd和iptables 这些软件</p>
+<p><h4>前置检查</h4><br>检查是否能够安装pptp  执行命令：</p>
+<pre><code>    modprobe ppp-compress-<span class="number">18</span> &amp;&amp; <span class="built_in">echo</span> ok
+</code></pre><p>modprobe是检测能否在内核中挂载对应模块的命令。后面与上echo ok ，如果输出为ok，表示支持ppp压缩。</p>
+<p>第二个是检测tun是否启用 执行命令：</p>
+<pre><code>    <span class="keyword">cat</span> /dev/net/tun
+</code></pre><p>输出结果为 cat: /dev/net/tun: File descriptor in bad state  表示开启了tun功能</p>
+<p><h4>安装软件</h4><br>我使用的是cenos 7 x64 具体信息见上面。 安装命令：</p>
+<pre><code>    yum install -<span class="keyword">y</span> <span class="keyword">perl</span> ppp iptables
+</code></pre><p>安装完毕后，可以通过</p>
+<pre><code>    yum <span class="keyword">list</span> <span class="keyword">perl</span> ppp iptables
+</code></pre><p>来列出相关的软件版本，例如我安装的软件版本如下：</p>
+<p> <img src="http://roytrack.qiniudn.com/blog_vpnppp_perl_iptables.jpg" alt="install software"></p>
+<p>安装好了上述软件后就要开始安装pptp了。由于cenos 7比较新，所以需要更新一下yum源。自己在这里折腾了一阵，网上一通乱找，可用较好的方案如下：</p>
+<pre><code>    <span class="keyword">vi</span> /etc/yum.repos.<span class="keyword">d</span>/epel.repo
+</code></pre><p>然后把下面这一段给粘过去</p>
+<pre><code>    [epel]
+    <span class="variable">name=</span>Extra Packages for Enterprise Linux <span class="number">7</span> - $basearch
+    <span class="comment">#baseurl=http://download.fedoraproject.org/pub/epel/7/$basearch</span>
+    <span class="variable">mirrorlist=</span>https://mirrors.fedoraproject.org/metalink?<span class="variable">repo=</span>epel-<span class="number">7</span>&amp;<span class="variable">arch=</span>$basearch
+    <span class="variable">failovermethod=</span>priority
+    <span class="variable">enabled=</span><span class="number">1</span>
+    <span class="variable">gpgcheck=</span><span class="number">0</span>
+    <span class="variable">gpgkey=</span>file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-<span class="number">7</span>
+
+    [epel-debuginfo]
+    <span class="variable">name=</span>Extra Packages for Enterprise Linux <span class="number">7</span> - $basearch - Debug
+    <span class="comment">#baseurl=http://download.fedoraproject.org/pub/epel/7/$basearch/debug</span>
+    <span class="variable">mirrorlist=</span>https://mirrors.fedoraproject.org/metalink?<span class="variable">repo=</span>epel-debug-<span class="number">7</span>&amp;<span class="variable">arch=</span>$basearch
+    <span class="variable">failovermethod=</span>priority
+    <span class="variable">enabled=</span><span class="number">0</span>
+    <span class="variable">gpgkey=</span>file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-<span class="number">7</span>
+    <span class="variable">gpgcheck=</span><span class="number">1</span>
+
+    [epel-source]
+    <span class="variable">name=</span>Extra Packages for Enterprise Linux <span class="number">7</span> - $basearch - Source
+    <span class="comment">#baseurl=http://download.fedoraproject.org/pub/epel/7/SRPMS</span>
+    <span class="variable">mirrorlist=</span>https://mirrors.fedoraproject.org/metalink?<span class="variable">repo=</span>epel-source-<span class="number">7</span>&amp;<span class="variable">arch=</span>$basearch
+    <span class="variable">failovermethod=</span>priority
+    <span class="variable">enabled=</span><span class="number">0</span>
+    <span class="variable">gpgkey=</span>file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-<span class="number">7</span>
+    <span class="variable">gpgcheck=</span><span class="number">1</span>
+</code></pre><p>:wq退出 然后执行 yum makecache 更新一下缓存。</p>
+<p>这时候就可以正式的安装pptpd了。 命令 yum install -y pptpd 执行一下。到此软件就基本安装完毕了。</p>
+<p><h4>配置软件</h4><br>编辑pptpd.conf文件，命令如下：</p>
+<pre><code>    <span class="keyword">vi</span> /etc/pptpd.<span class="keyword">conf</span>
+</code></pre><p>在文件结尾处有localip字样。配置如下：</p>
+<pre><code>    <span class="title">localip</span> <span class="number">192.168.0.1</span>
+    remoteip <span class="number">192.168.0.234</span>-<span class="number">238</span>,<span class="number">192.168.0.245</span>
+</code></pre><p>第一行是vpn服务端的内网ip，第二行是客户端登陆后给分配的ip池。直接原样复制就行。</p>
+<p>编辑options.pptpd文件，命令如下：</p>
+<pre><code>    <span class="keyword">vi</span> /etc/ppp/<span class="keyword">options</span>.pptpd
+</code></pre><p>找到ms-dns行 修改如下：</p>
+<pre><code>    ms-dns 8.8.8.8
+    ms-dns 114.114.114.114
+</code></pre><p>用不易被污染的dns就行例如google的四个4，四个8等等。</p>
+<p>编辑chap-secrets文件，命令如下：</p>
+<pre><code>    <span class="keyword">vi</span> /etc/ppp/chap-secrets
+</code></pre><p>配置格式为 用户名 pptpd 密码 *   例如：</p>
+<pre><code>    roytrack pptpd 123 <span class="keyword">*</span>
+</code></pre><p>编辑sysctl.conf文件</p>
+<pre><code>    <span class="keyword">vi</span> /etc/sysctl.<span class="keyword">conf</span>       编辑文件命令
+    net.ipv4.ip_forward=<span class="number">1</span>     添加转发内容
+    sysctl -<span class="keyword">p</span>                       执行该命令让配置生效
+</code></pre><p>编辑rc.local文件</p>
+<pre><code>    <span class="keyword">chmod</span> +<span class="keyword">x</span> /etc/rc.d/rc.<span class="keyword">local</span>            赋予该文件执行权限
+    vi /etc/rc.d/rc.<span class="keyword">local</span>               编辑该文件
+    iptables -t nat -A POSTROUTING -<span class="keyword">s</span> <span class="number">192.168</span>.<span class="number">0</span>.<span class="number">0</span>/<span class="number">24</span> -o eth<span class="number">0</span> -j MASQUERADE          添加路由转发
+</code></pre><p>启动pptpd</p>
+<pre><code>    /etc/init.d/pptpd <span class="operator"><span class="keyword">start</span>         启动命令
+    chkconfig pptpd <span class="keyword">on</span>             pptpd开机自启动</span>
+</code></pre><p>到此vpn服务端就搭建好了。</p>
+<p><h3 id="vpnconfig"> vpn 本地配置</h3><br>在win7中 打开控制面板-网络和共享中心-设置新的连接或网络-连接到工作区 一步步填上用户名 密码就ok了。</p>
+<p>附两个实用的小命令</p>
+<pre><code>            ifconfig | <span class="keyword">grep</span> ppp  返回在线人数
+            <span class="keyword">last</span> | <span class="keyword">grep</span> still | <span class="keyword">grep</span> ppp   查看哪些vpn用户在线
+</code></pre><p>在完成本部分内容中参考了<a href="http://www.dabu.info/centos6-4-structures-pptp-vpn.html" target="_blank" rel="external">大步</a>、<a href="http://www.wanghailin.cn/scka/centos-7-vpn" target="_blank" rel="external">SCKA</a>的内容，对他们表示感谢，更多的资料可以在他们的博文中找到。</p>
+<p><h2 id="shadowsock">shadowsock</h2></p>
+<p><h3 id="ssinstall">shadowsock的安装与自启动</h3><br>以前用的是goagent，随着名气越大，也越不稳定了，而且有了自己的主机还是直接用自己的资源比较舒服。省去了GAE的操作。</p>
+<p>shadowsock是由clowwindy<a href="http://www.v2ex.com/member/clowwindy" target="_blank" rel="external">v2ex账号</a>、<a href="https://github.com/clowwindy" target="_blank" rel="external">github账号</a>发起的一个sock5加密代理，有多种语言版本实现，我选的是python。现在作为一个开源项目在<a href="https://github.com/shadowsocks/shadowsocks" target="_blank" rel="external">github</a>上蓬勃发展。</p>
+<p>安装shadowsock需要以下命令：</p>
+<pre><code>            <span class="keyword">python</span> --<span class="keyword">version</span>  确定<span class="keyword">python</span>版本在<span class="number">2.6</span>或<span class="number">2.7</span>
+            yum install <span class="keyword">python</span>-setuptools &amp;&amp; easy_install pip       如果没有<span class="keyword">python</span> 安装一下下啦
+            pip install shadowsocks                                         通过pip来安装shadowsock
+</code></pre><p>简单三步命令就安装完毕了。</p>
+<p>在写这个教程的时候 这个json文本的格式已经变了。所以最好参考最新的shadowsock。截止行文时间最新版为…..俺也不知道啦 给一个标准的<a href="https://github.com/shadowsocks/shadowsocks/wiki/Shadowsocks-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E" target="_blank" rel="external">安装教程</a>。</p>
+<p>由于我用的是centos（教程中明确说了对新手不友好哦！）。所以在折腾自启动的道路上走了好久。在<a href="https://github.com/shadowsocks/shadowsocks/wiki/%E7%94%A8-supervisor-%E8%BF%90%E8%A1%8C-shadowsocks]" target="_blank" rel="external">这篇文章</a><br>中获救了。</p>
+<p><h3 id="ssconfig">客户端配置与选择</h3><br>客户端有很多种选择，在单位我用的是<a href="https://github.com/nihgwu/Nevermore" target="_blank" rel="external">nevermore</a>是nodejs做的一个客户端。在家里用的是他推荐的<a href="https://github.com/shadowsocks/shadowsocks-csharp" target="_blank" rel="external">shadowsocks-csharp</a>。<br>两个都还可以。版本越新越好哦。<br>配置好之后chrome的switchySharp最推荐使用的pac是：</p>
+<pre><code>            <span class="symbol">https:</span>/<span class="regexp">/raw.githubusercontent.com/clowwindy</span><span class="regexp">/gfwlist2pac/master</span><span class="regexp">/test/proxy</span>.pac
+</code></pre><p>其实客户端，服务器配置都是使用的那个json文件。</p>
+<p><h3 id="sstohttp">采用privoxy转成http代理</h3><br>由于shadowsock使用的是sock5代理，有些软件只支持http代理。这里就需要<a href="http://roytrack.qiniudn.com/blog_vpn_privoxy-3.0.22.zip" target="_blank" rel="external">privoxy</a>这个小软件来起作用了。<br>是一个绿色软件，打开后options-Edit Main Configuration 更改配置</p>
+<pre><code>             <span class="keyword">forward</span>-socks5t   /               <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">1080</span> .   一定要记得搜<span class="keyword">forward</span>-socks5t  别找 这配置文件太大了。
+</code></pre><p>写完了。12月开始打算写，2015年2月5日18:16:05写完了。</p>
 
       
     </div>
@@ -121,7 +267,7 @@
 
 <section id="comment">
   <h1 class="title">comment</h1>
-  <div class="ds-thread" data-title="在oceanDigital主机上玩vpn和shadowsock">
+  <div class="ds-thread" data-title="在DigitalOcean主机上玩vpn和shadowsock">
   </div>
 </section>
 
@@ -173,7 +319,7 @@
       <ul>
         
           <li>
-            <a href="/2014/12/07/vpnAndshadowsock/">在oceanDigital主机上玩vpn和shadowsock</a>
+            <a href="/2014/12/07/vpnAndshadowsock/">在DigitalOcean主机上玩vpn和shadowsock</a>
           </li>
         
       </ul>
@@ -189,7 +335,7 @@
   <div id='foot-stars'></div>
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2014 &nbsp;&nbsp;&nbsp; ROYTRACK<br>
+      &copy; 2015 &nbsp;&nbsp;&nbsp; ROYTRACK<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
       Theme by <a href="https://github.com/xing5/hexo-theme-animastars" target="_blank">xing5</a>
       
